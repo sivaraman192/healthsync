@@ -1,6 +1,10 @@
 package com.healthsync.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,16 +22,22 @@ public class Doctor {
     @Column(name = "user_id")
     private Long userId;
 
+    @NotBlank(message = "Name cannot be empty")
     @Column(nullable = false)
     private String name;
 
+    @NotBlank(message = "Specialization cannot be empty")
     @Column(nullable = false)
     private String specialization;
 
-    private int experience;
+    @NotNull(message = "Experience cannot be null")
+    @Min(value = 0, message = "Experience cannot be negative")
+    private Integer experience;
 
     private String phone;
 
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Valid email is required")
     @Column(nullable = false, unique = true)
     private String email;
 

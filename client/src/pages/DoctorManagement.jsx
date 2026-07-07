@@ -56,9 +56,11 @@ const DoctorManagement = () => {
       if (editId) {
         // Exclude password from update payload to avoid overwriting password inadvertently
         const { password, ...updatePayload } = formData;
+        console.log("Axios request payload (update):", updatePayload);
         await doctorService.update(editId, updatePayload);
         showToast('Doctor profile updated successfully', 'success');
       } else {
+        console.log("Axios request payload (create):", formData);
         await doctorService.create(formData);
         showToast('New doctor added successfully', 'success');
       }

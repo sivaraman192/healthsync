@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class DoctorDTO {
+public class DoctorRequest {
     private Long id;
 
     @NotBlank(message = "Name cannot be empty")
