@@ -28,5 +28,7 @@ public class DoctorRequest {
 
     private String availableDays;
     private String availableTime;
+
+    @NotBlank(message = "Password cannot be empty")
     private String password;
 }

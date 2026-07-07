@@ -47,6 +47,6 @@ public class Doctor {
     @Column(name = "available_time")
     private String availableTime;
 
-    @Transient
+    @Column(name = "password")
     private String password;
 }

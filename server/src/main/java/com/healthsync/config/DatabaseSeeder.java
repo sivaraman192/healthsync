@@ -19,7 +19,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // 1. Create/Update Default Admin User
-        String adminEmail = "admin@healthsync.com";
+        String adminEmail = "admin@gmail.com";
         User admin = userRepository.findByEmail(adminEmail).orElse(null);
         if (admin == null) {
             admin = new User();

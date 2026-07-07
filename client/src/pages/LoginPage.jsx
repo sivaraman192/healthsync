@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
 
@@ -26,7 +26,12 @@ const LoginPage = () => {
 
     setSubmitting(true);
     try {
-      const loggedUser = await login(formData);
+      // Sends exactly { email, password }
+      const payload = {
+        email: formData.email.trim(),
+        password: formData.password
+      };
+      const loggedUser = await login(payload);
       showToast('Logged in successfully', 'success');
       
       // Redirect based on role

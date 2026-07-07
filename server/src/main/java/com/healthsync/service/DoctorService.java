@@ -33,13 +33,15 @@ public class DoctorService {
             throw new RuntimeException("Email address is already in use");
         }
 
+        String plainPassword = (doctorRequest.getPassword() != null && !doctorRequest.getPassword().trim().isEmpty()) 
+                               ? doctorRequest.getPassword() : "doctor123";
+        String encodedPassword = passwordEncoder.encode(plainPassword);
+
         // Create User account for Doctor
         User user = new User();
         user.setName(doctorRequest.getName());
         user.setEmail(doctorRequest.getEmail());
-        String plainPassword = (doctorRequest.getPassword() != null && !doctorRequest.getPassword().trim().isEmpty()) 
-                               ? doctorRequest.getPassword() : "doctor123";
-        user.setPassword(passwordEncoder.encode(plainPassword));
+        user.setPassword(encodedPassword);
         user.setRole("DOCTOR");
         user.setPhone(doctorRequest.getPhone());
         User savedUser = userRepository.save(user);
@@ -54,6 +56,7 @@ public class DoctorService {
         doctor.setExperience(doctorRequest.getExperience());
         doctor.setAvailableDays(doctorRequest.getAvailableDays());
         doctor.setAvailableTime(doctorRequest.getAvailableTime());
+        doctor.setPassword(encodedPassword);
 
         return doctorRepository.save(doctor);
     }
@@ -70,19 +73,38 @@ public class DoctorService {
         doctor.setAvailableDays(doctorDetails.getAvailableDays());
         doctor.setAvailableTime(doctorDetails.getAvailableTime());
 
-        // Update corresponding User record if present
-        if (doctor.getUserId() != null) {
-            userRepository.findById(doctor.getUserId()).ifPresent(user -> {
-                user.setName(doctorDetails.getName());
-                user.setPhone(doctorDetails.getPhone());
-                userRepository.save(user);
-            });
+        if (doctorDetails.getPassword() != null && !doctorDetails.getPassword().trim().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(doctorDetails.getPassword());
+            doctor.setPassword(encodedPassword);
+            if (doctor.getUserId() != null) {
+                userRepository.findById(doctor.getUserId()).ifPresent(user -> {
+                    user.setName(doctorDetails.getName());
+                    user.setPhone(doctorDetails.getPhone());
+                    user.setPassword(encodedPassword);
+                    userRepository.save(user);
+                });
+            } else {
+                userRepository.findByEmail(doctor.getEmail()).ifPresent(user -> {
+                    user.setName(doctorDetails.getName());
+                    user.setPhone(doctorDetails.getPhone());
+                    user.setPassword(encodedPassword);
+                    userRepository.save(user);
+                });
+            }
         } else {
-            userRepository.findByEmail(doctor.getEmail()).ifPresent(user -> {
-                user.setName(doctorDetails.getName());
-                user.setPhone(doctorDetails.getPhone());
-                userRepository.save(user);
-            });
+            if (doctor.getUserId() != null) {
+                userRepository.findById(doctor.getUserId()).ifPresent(user -> {
+                    user.setName(doctorDetails.getName());
+                    user.setPhone(doctorDetails.getPhone());
+                    userRepository.save(user);
+                });
+            } else {
+                userRepository.findByEmail(doctor.getEmail()).ifPresent(user -> {
+                    user.setName(doctorDetails.getName());
+                    user.setPhone(doctorDetails.getPhone());
+                    userRepository.save(user);
+                });
+            }
         }
 
         return doctorRepository.save(doctor);
@@ -93,7 +115,6 @@ public class DoctorService {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Doctor profile not found with ID: " + id));
 
-        // Delete corresponding user credentials
         if (doctor.getUserId() != null) {
             userRepository.deleteById(doctor.getUserId());
         } else {
