@@ -1,5 +1,6 @@
 package com.healthsync.controller;
 
+import com.healthsync.dto.DoctorDTO;
 import com.healthsync.model.Doctor;
 import com.healthsync.model.User;
 import com.healthsync.repository.DoctorRepository;
@@ -41,31 +42,40 @@ public class DoctorController {
     }
 
     @PostMapping("/api/admin/doctors")
-    public ResponseEntity<Doctor> createDoctor(@Valid @RequestBody Doctor doctor) {
-        if (userRepository.existsByEmail(doctor.getEmail())) {
+    public ResponseEntity<Doctor> createDoctor(@Valid @RequestBody DoctorDTO doctorDTO) {
+        if (userRepository.existsByEmail(doctorDTO.getEmail())) {
             throw new RuntimeException("Email address is already in use");
         }
 
         // Create User account for Doctor
         User user = new User();
-        user.setName(doctor.getName());
-        user.setEmail(doctor.getEmail());
+        user.setName(doctorDTO.getName());
+        user.setEmail(doctorDTO.getEmail());
         // Use password from request, default to doctor123 if blank
-        String plainPassword = (doctor.getPassword() != null && !doctor.getPassword().trim().isEmpty()) 
-                               ? doctor.getPassword() : "doctor123";
+        String plainPassword = (doctorDTO.getPassword() != null && !doctorDTO.getPassword().trim().isEmpty()) 
+                               ? doctorDTO.getPassword() : "doctor123";
         user.setPassword(passwordEncoder.encode(plainPassword));
         user.setRole("DOCTOR");
-        user.setPhone(doctor.getPhone());
+        user.setPhone(doctorDTO.getPhone());
         User savedUser = userRepository.save(user);
 
         // Map Doctor profile to the newly created User ID
+        Doctor doctor = new Doctor();
         doctor.setUserId(savedUser.getId());
+        doctor.setName(doctorDTO.getName());
+        doctor.setEmail(doctorDTO.getEmail());
+        doctor.setPhone(doctorDTO.getPhone());
+        doctor.setSpecialization(doctorDTO.getSpecialization());
+        doctor.setExperience(doctorDTO.getExperience());
+        doctor.setAvailableDays(doctorDTO.getAvailableDays());
+        doctor.setAvailableTime(doctorDTO.getAvailableTime());
+
         Doctor savedDoctor = doctorRepository.save(doctor);
         return ResponseEntity.ok(savedDoctor);
     }
 
     @PutMapping("/api/admin/doctors/{id}")
-    public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id, @Valid @RequestBody Doctor doctorDetails) {
+    public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id, @Valid @RequestBody DoctorDTO doctorDetails) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Doctor profile not found with ID: " + id));
 
