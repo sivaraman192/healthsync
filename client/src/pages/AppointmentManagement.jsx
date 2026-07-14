@@ -46,87 +46,92 @@ const AppointmentManagement = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="space-y-10">
       {ToastComponent}
-      <div className="border-b border-slate-100 pb-6 mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900">Appointment Management</h1>
-        <p className="text-slate-500 mt-1">Review Patient bookings, change scheduling status, and remove records.</p>
+
+      {/* Header and Brand */}
+      <div>
+        <span className="text-[10px] text-red-550 font-extrabold uppercase tracking-widest bg-red-950/40 border border-red-800/30 px-3 py-1 rounded-full">
+          Booking Ledger System
+        </span>
+        <h1 className="text-4xl font-black text-white mt-3 tracking-tight font-sans">Active Appointment Rosters</h1>
+        <p className="text-slate-400 text-sm mt-1">Review Patient bookings, confirm schedule timelines, and manage triage database records.</p>
       </div>
 
       {loading ? (
-        <div className="text-center py-10">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-teal-600 mx-auto"></div>
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500 mx-auto"></div>
         </div>
       ) : appointments.length === 0 ? (
-        <div className="bg-white rounded-xl border border-slate-100 p-8 text-center text-slate-500">
-          <ShieldAlert className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-          <p className="font-semibold text-slate-700">No scheduled appointments</p>
+        <div className="bg-[#111827]/40 border border-slate-800/60 rounded-2xl p-12 text-center text-slate-500">
+          <ShieldAlert className="h-10 w-10 text-slate-650 mx-auto mb-4" />
+          <p className="font-semibold text-sm">No scheduled appointments found.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-100 overflow-hidden shadow-sm">
+        <div className="bg-[#111827]/25 border border-slate-800/60 rounded-2xl shadow-xl overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-100 text-left">
-              <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider">
-                <tr>
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-850 text-[10px] font-bold uppercase text-slate-500 tracking-wider bg-slate-900/10">
                   <th className="px-6 py-4">ID</th>
-                  <th className="px-6 py-4">Patient</th>
+                  <th className="px-6 py-4">Patient Profile</th>
                   <th className="px-6 py-4">Doctor ID</th>
                   <th className="px-6 py-4">Date & Time</th>
-                  <th className="px-6 py-4">Reason</th>
+                  <th className="px-6 py-4">Reason for Visit</th>
                   <th className="px-6 py-4">Status</th>
                   <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
+              <tbody className="divide-y divide-slate-850/50 text-xs">
                 {appointments.map((apt) => (
-                  <tr key={apt.id} className="hover:bg-slate-50/80 transition">
-                    <td className="px-6 py-4 whitespace-nowrap text-slate-400 font-mono text-xs">#{apt.id}</td>
+                  <tr key={apt.id} className="hover:bg-slate-900/30 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-550 font-mono">#{apt.id}</td>
                     <td className="px-6 py-4">
-                      <span className="font-semibold text-slate-800 block">{apt.patientName}</span>
-                      <span className="text-xs text-slate-500 block">{apt.patientEmail}</span>
+                      <span className="font-semibold text-slate-200 block">{apt.patientName}</span>
+                      <span className="text-[10px] text-slate-500 block mt-0.5">{apt.patientEmail}</span>
                     </td>
-                    <td className="px-6 py-4 text-slate-700 font-medium">#{apt.doctorId}</td>
+                    <td className="px-6 py-4 text-slate-400 font-medium">#{apt.doctorId}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="font-semibold text-slate-800">{apt.appointmentDate}</span>
-                      <span className="block text-xs text-slate-500">{apt.appointmentTime}</span>
+                      <span className="font-semibold text-slate-350 block">{apt.appointmentDate}</span>
+                      <span className="block text-[10px] text-slate-500 mt-0.5">{apt.appointmentTime}</span>
                     </td>
-                    <td className="px-6 py-4 max-w-xs truncate text-slate-600 font-medium">{apt.reason}</td>
+                    <td className="px-6 py-4 max-w-xs truncate text-slate-400 font-medium">{apt.reason}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                        apt.status === 'COMPLETED' ? 'bg-emerald-50 text-emerald-700' :
-                        apt.status === 'ACCEPTED' ? 'bg-blue-50 text-blue-700' :
-                        apt.status === 'REJECTED' ? 'bg-red-50 text-red-700' :
-                        'bg-amber-50 text-amber-700'
+                      <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold border ${
+                        apt.status === 'COMPLETED' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-450' :
+                        apt.status === 'ACCEPTED' ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' :
+                        apt.status === 'REJECTED' ? 'bg-red-500/10 border-red-500/30 text-red-400' :
+                        'bg-amber-500/10 border-amber-500/30 text-amber-455'
                       }`}>
                         {apt.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right whitespace-nowrap">
-                      <div className="flex gap-2 justify-end">
+                      <div className="flex gap-2.5 justify-end">
                         {apt.status === 'PENDING' && (
                           <>
                             <button
                               onClick={() => handleUpdateStatus(apt.id, 'ACCEPTED')}
-                              className="text-emerald-600 hover:text-emerald-700 p-1 bg-emerald-50 rounded hover:bg-emerald-100 transition"
+                              className="text-emerald-400 hover:text-emerald-300 p-1.5 bg-slate-900 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors cursor-pointer"
                               title="Accept"
                             >
-                              <Check className="h-4 w-4" />
+                              <Check className="h-3.5 w-3.5" />
                             </button>
                             <button
                               onClick={() => handleUpdateStatus(apt.id, 'REJECTED')}
-                              className="text-red-600 hover:text-red-700 p-1 bg-red-50 rounded hover:bg-red-100 transition"
+                              className="text-red-400 hover:text-red-350 p-1.5 bg-slate-900 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors cursor-pointer"
                               title="Reject"
                             >
-                              <X className="h-4 w-4" />
+                              <X className="h-3.5 w-3.5" />
                             </button>
                           </>
                         )}
                         <button
                           onClick={() => handleDelete(apt.id)}
-                          className="text-slate-500 hover:text-red-600 p-1 hover:bg-slate-50 rounded transition"
+                          className="text-slate-450 hover:text-red-450 p-1.5 bg-slate-900 border border-slate-800 rounded-lg hover:border-slate-700 transition-colors cursor-pointer"
                           title="Delete"
                         >
-                          <Trash className="h-4 w-4" />
+                          <Trash className="h-3.5 w-3.5" />
                         </button>
                       </div>
                     </td>

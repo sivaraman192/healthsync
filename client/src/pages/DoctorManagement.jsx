@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { doctorService } from '../services/api';
 import { useToast } from '../components/Toast';
-import { UserPlus, Edit, Trash, AlertCircle } from 'lucide-react';
+import { UserPlus, Edit, Trash, AlertCircle, Sparkles } from 'lucide-react';
 
 const DoctorManagement = () => {
   const [doctors, setDoctors] = useState([]);
@@ -132,132 +132,139 @@ const DoctorManagement = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="space-y-10">
       {ToastComponent}
-      <div className="border-b border-slate-100 pb-6 mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900">Doctor Management</h1>
-        <p className="text-slate-500 mt-1">Configure credentials, specializations, and schedule directories for HealthSync doctors.</p>
+
+      {/* Header and Brand */}
+      <div>
+        <span className="text-[10px] text-red-500 font-extrabold uppercase tracking-widest bg-red-950/40 border border-red-800/30 px-3 py-1 rounded-full">
+          Roster Management System
+        </span>
+        <h1 className="text-4xl font-black text-white mt-3 tracking-tight font-sans">Medical Practitioners Registry</h1>
+        <p className="text-slate-400 text-sm mt-1">Configure credentials, specialization attributes, and duty schedules for HealthSync doctors.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Form Column */}
-        <div className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm h-fit">
-          <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-            {editId ? '✏️ Edit Doctor Profile' : '➕ Register Doctor'}
+        <div className="bg-slate-900/25 border border-slate-800/60 p-6 rounded-2xl shadow-xl h-fit relative">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-red-500/5 rounded-bl-full" />
+          <h3 className="text-base font-bold text-slate-100 mb-5 flex items-center gap-2">
+            <Sparkles className="h-4.5 w-4.5 text-red-500" />
+            {editId ? 'Edit Doctor Profile' : 'Register Doctor'}
           </h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
+              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Full Name</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Dr. Sarah Connor"
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-905/60 border border-slate-800 focus:border-red-500/55 rounded-xl text-xs outline-none text-slate-200 placeholder-slate-650 transition-colors"
               />
             </div>
             {!editId && (
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Password</label>
+                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Password</label>
                 <input
                   type="password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-905/60 border border-slate-800 focus:border-red-500/55 rounded-xl text-xs outline-none text-slate-200 placeholder-slate-650 transition-colors"
                 />
               </div>
             )}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Email Address</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="doctor@healthsync.com"
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-905/60 border border-slate-800 focus:border-red-500/55 rounded-xl text-xs outline-none text-slate-200 placeholder-slate-650 transition-colors"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
+              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Phone Number</label>
               <input
                 type="text"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="+1 (555) 321-4455"
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-905/60 border border-slate-800 focus:border-red-500/55 rounded-xl text-xs outline-none text-slate-200 placeholder-slate-650 transition-colors"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Specialization</label>
+                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Specialization</label>
                 <input
                   type="text"
                   name="specialization"
                   value={formData.specialization}
                   onChange={handleChange}
                   placeholder="Cardiology"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-905/60 border border-slate-800 focus:border-red-500/55 rounded-xl text-xs outline-none text-slate-200 placeholder-slate-650 transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Experience (Years)</label>
+                <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Exp (Years)</label>
                 <input
                   type="number"
                   name="experience"
                   value={formData.experience}
                   onChange={handleChange}
                   placeholder="8"
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-905/60 border border-slate-800 focus:border-red-500/55 rounded-xl text-xs outline-none text-slate-200 placeholder-slate-655 transition-colors"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Available Days</label>
+              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Available Days</label>
               <input
                 type="text"
                 name="availableDays"
                 value={formData.availableDays}
                 onChange={handleChange}
                 placeholder="Mon, Wed, Fri"
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-905/60 border border-slate-800 focus:border-red-500/55 rounded-xl text-xs outline-none text-slate-200 placeholder-slate-655 transition-colors"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Available Time</label>
+              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Available Time</label>
               <input
                 type="text"
                 name="availableTime"
                 value={formData.availableTime}
                 onChange={handleChange}
                 placeholder="09:00 AM - 02:00 PM"
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-905/60 border border-slate-800 focus:border-red-500/55 rounded-xl text-xs outline-none text-slate-200 placeholder-slate-655 transition-colors"
               />
             </div>
 
-            <div className="flex gap-2 pt-2">
+            <div className="flex gap-2 pt-3">
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 rounded-lg text-sm shadow transition flex justify-center"
+                className="flex-1 bg-gradient-to-r from-red-605 to-rose-500 hover:from-red-500 hover:to-rose-400 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg shadow-red-500/10 transition-all flex justify-center cursor-pointer"
               >
                 {submitting ? (
-                  <span className="inline-block animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></span>
+                  <span className="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></span>
                 ) : editId ? (
-                  'Update'
+                  'Update Profile'
                 ) : (
-                  'Add Doctor'
+                  'Add Practitioner'
                 )}
               </button>
               {editId && (
                 <button
                   type="button"
                   onClick={handleCancelEdit}
-                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-lg text-sm transition"
+                  className="bg-slate-800 hover:bg-slate-700/80 text-slate-200 font-semibold py-2.5 px-4 rounded-xl text-xs transition-colors cursor-pointer border border-slate-750"
                 >
                   Cancel
                 </button>
@@ -268,40 +275,49 @@ const DoctorManagement = () => {
 
         {/* Directory Column */}
         <div className="lg:col-span-2 space-y-4">
-          <h3 className="text-lg font-bold text-slate-800">Doctor Directory ({doctors.length})</h3>
+          <h3 className="text-base font-bold text-slate-100">Registered Roster Directory ({doctors.length})</h3>
           {loading ? (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-teal-600 mx-auto"></div>
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500 mx-auto"></div>
             </div>
           ) : doctors.length === 0 ? (
-            <div className="bg-white rounded-xl border border-slate-100 p-8 text-center text-slate-500">
-              <AlertCircle className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-              <p className="font-semibold">No doctors registered yet.</p>
+            <div className="bg-[#111827]/40 border border-slate-800/60 rounded-2xl p-12 text-center text-slate-500">
+              <AlertCircle className="h-10 w-10 text-slate-650 mx-auto mb-4" />
+              <p className="font-semibold text-sm">No doctors registered yet.</p>
+              <p className="text-xs text-slate-600 mt-1">Use the registry panel to create a doctor shift roster.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {doctors.map((doc) => (
-                <div key={doc.id} className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
-                  <div className="space-y-1">
-                    <h4 className="font-bold text-slate-800 text-base">Dr. {doc.name}</h4>
-                    <p className="text-xs text-slate-400 font-semibold uppercase">{doc.specialization} • {doc.experience} Years Exp</p>
-                    <p className="text-xs text-slate-500">Email: {doc.email}</p>
-                    {doc.phone && <p className="text-xs text-slate-500">Phone: {doc.phone}</p>}
-                    <div className="pt-2 text-xs text-slate-600 bg-slate-50 p-2.5 rounded border border-slate-100">
-                      <p className="font-bold text-slate-700 uppercase tracking-wide text-[10px] mb-0.5">Availability</p>
+                <div key={doc.id} className="bg-[#111827]/40 border border-slate-800/60 rounded-2xl p-5 shadow-lg flex flex-col justify-between hover:border-slate-750 transition-all relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-red-500/5 rounded-bl-full" />
+                  <div className="space-y-2">
+                    <div>
+                      <h4 className="font-bold text-slate-100 text-sm">Dr. {doc.name}</h4>
+                      <span className="inline-block mt-1 text-[9px] font-bold text-red-400 bg-red-950/40 border border-red-800/30 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                        {doc.specialization}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-slate-400 space-y-0.5">
+                      <p>Experience: {doc.experience} Years</p>
+                      <p className="truncate">Email: {doc.email}</p>
+                      {doc.phone && <p>Phone: {doc.phone}</p>}
+                    </div>
+                    <div className="pt-2 text-[10px] text-slate-350 bg-slate-950/40 p-2.5 rounded-xl border border-slate-900">
+                      <p className="font-bold text-slate-500 uppercase tracking-wider text-[9px] mb-0.5">Shift Telemetry</p>
                       <p>{doc.availableDays || 'Not set'} @ {doc.availableTime || 'Not set'}</p>
                     </div>
                   </div>
-                  <div className="flex gap-2 justify-end border-t border-slate-50 pt-3">
+                  <div className="flex gap-2 justify-end border-t border-slate-850/60 pt-3 mt-4">
                     <button
                       onClick={() => handleEdit(doc)}
-                      className="text-slate-600 hover:text-teal-600 p-1.5 hover:bg-slate-50 rounded transition text-xs flex items-center gap-1 font-semibold"
+                      className="text-slate-450 hover:text-red-400 p-1.5 hover:bg-slate-900 rounded-lg transition-colors text-[10px] flex items-center gap-1 font-bold cursor-pointer"
                     >
                       <Edit className="h-3.5 w-3.5" /> Edit
                     </button>
                     <button
                       onClick={() => handleDelete(doc.id)}
-                      className="text-red-500 hover:text-red-700 p-1.5 hover:bg-red-50 rounded transition text-xs flex items-center gap-1 font-semibold"
+                      className="text-red-405/80 hover:text-red-400 p-1.5 hover:bg-red-500/5 rounded-lg transition-colors text-[10px] flex items-center gap-1 font-bold cursor-pointer"
                     >
                       <Trash className="h-3.5 w-3.5" /> Delete
                     </button>

@@ -40,73 +40,83 @@ const MyAppointments = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="space-y-8 pb-10 text-left w-full relative">
+      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
       {ToastComponent}
-      <div className="border-b border-slate-100 pb-6 mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900 font-sans">My Consultations</h1>
-        <p className="text-slate-500 mt-1">Review dates, approval status, and notes from doctors.</p>
+      
+      <div className="relative overflow-hidden bg-gradient-to-r from-red-950/20 via-[#0d0d0d] to-slate-900/30 border border-white/5 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-2xl relative z-10">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-red-500 animate-ping" />
+            <span className="text-[9px] uppercase font-black text-red-505 tracking-wider">Outpatient Journal</span>
+          </div>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight leading-none">My Consultations</h1>
+          <p className="text-slate-400 text-xs">Review schedules, approval status, and notes from medical specialists.</p>
+        </div>
       </div>
 
       {loading ? (
-        <div className="text-center py-10">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-teal-600 mx-auto"></div>
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500 mx-auto"></div>
         </div>
       ) : appointments.length === 0 ? (
-        <div className="bg-white rounded-xl border border-slate-100 p-8 text-center text-slate-500">
-          <AlertCircle className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-          <p className="font-semibold text-slate-700">No scheduled appointments</p>
+        <div className="bg-[#111111]/45 border border-slate-800/60 rounded-3xl p-12 text-center text-slate-500 relative z-10">
+          <AlertCircle className="h-10 w-10 text-slate-650 mx-auto mb-4 animate-bounce" />
+          <p className="font-semibold text-sm text-slate-350">No scheduled appointments</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-100 overflow-hidden shadow-sm">
-          <table className="min-w-full divide-y divide-slate-100 text-left">
-            <thead className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider">
-              <tr>
-                <th className="px-6 py-4">Date & Time</th>
-                <th className="px-6 py-4">Reason for Visit</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Doctor Feedback / Notes</th>
-                <th className="px-6 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-sm">
-              {appointments.map((apt) => (
-                <tr key={apt.id} className="hover:bg-slate-50/80 transition">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="font-semibold text-slate-800">{apt.appointmentDate}</span>
-                    <span className="block text-xs text-slate-500">{apt.appointmentTime}</span>
-                  </td>
-                  <td className="px-6 py-4 font-medium text-slate-700">{apt.reason}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                      apt.status === 'COMPLETED' ? 'bg-emerald-50 text-emerald-700' :
-                      apt.status === 'ACCEPTED' ? 'bg-blue-50 text-blue-700' :
-                      apt.status === 'REJECTED' ? 'bg-red-50 text-red-700' :
-                      'bg-amber-50 text-amber-700'
-                    }`}>
-                      {apt.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    {apt.prescriptionNotes ? (
-                      <span className="text-slate-600 bg-slate-50 p-2 rounded border border-slate-100 block text-xs max-w-xs">{apt.prescriptionNotes}</span>
-                    ) : (
-                      <span className="text-slate-400 italic">No feedback provided yet</span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-right whitespace-nowrap">
-                    {apt.status === 'PENDING' && (
-                      <button
-                        onClick={() => handleCancel(apt.id)}
-                        className="bg-red-50 hover:bg-red-100 text-red-600 font-semibold py-1 px-3 rounded text-xs transition"
-                      >
-                        Cancel
-                      </button>
-                    )}
-                  </td>
+        <div className="bg-[#111111]/25 border border-slate-800/60 rounded-3xl overflow-hidden shadow-xl relative z-10">
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-850 text-[10px] font-bold uppercase text-slate-500 tracking-wider bg-slate-900/10">
+                  <th className="px-6 py-4">Date & Time</th>
+                  <th className="px-6 py-4">Reason for Visit</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">Doctor Feedback / Notes</th>
+                  <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-850/50 text-xs">
+                {appointments.map((apt) => (
+                  <tr key={apt.id} className="hover:bg-slate-900/30 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="font-semibold text-slate-200 block">{apt.appointmentDate}</span>
+                      <span className="block text-[10px] text-slate-500 mt-0.5">{apt.appointmentTime}</span>
+                    </td>
+                    <td className="px-6 py-4 font-semibold text-slate-300 max-w-xs truncate">{apt.reason}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold border ${
+                        apt.status === 'COMPLETED' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-450' :
+                        apt.status === 'ACCEPTED' ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' :
+                        apt.status === 'REJECTED' ? 'bg-red-500/10 border-red-500/30 text-red-400' :
+                        'bg-amber-500/10 border-amber-500/30 text-amber-455'
+                      }`}>
+                        {apt.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      {apt.prescriptionNotes ? (
+                        <span className="text-slate-400 bg-slate-950 p-2.5 rounded-xl border border-slate-900 block text-[11px] max-w-xs">{apt.prescriptionNotes}</span>
+                      ) : (
+                        <span className="text-slate-600 italic">No feedback provided yet</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 text-right whitespace-nowrap">
+                      {apt.status === 'PENDING' && (
+                        <button
+                          onClick={() => handleCancel(apt.id)}
+                          className="bg-red-500/15 hover:bg-red-550/20 text-red-400 font-bold py-1.5 px-3 rounded-lg border border-red-500/20 text-[10px] transition-all cursor-pointer"
+                        >
+                          Cancel Slot
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

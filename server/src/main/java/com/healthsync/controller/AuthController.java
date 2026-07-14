@@ -4,8 +4,12 @@ import com.healthsync.config.JwtUtil;
 import com.healthsync.dto.AuthResponse;
 import com.healthsync.dto.LoginRequest;
 import com.healthsync.dto.RegisterRequest;
+import com.healthsync.model.Patient;
 import com.healthsync.model.User;
+import com.healthsync.model.Notification;
+import com.healthsync.repository.PatientRepository;
 import com.healthsync.repository.UserRepository;
+import com.healthsync.repository.NotificationRepository;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +32,12 @@ public class AuthController {
     private UserRepository userRepository;
 
     @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -43,6 +53,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(errorResponse);
         }
 
+        // Create core User
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
@@ -51,13 +62,44 @@ public class AuthController {
         user.setPhone(request.getPhone());
 
         User savedUser = userRepository.save(user);
-        logger.info("Successfully registered user: {}", savedUser.getEmail());
+
+        // Create associated Patient profile
+        Patient patient = new Patient();
+        patient.setUserId(savedUser.getId());
+        patient.setFullName(request.getName());
+        patient.setEmail(request.getEmail());
+        patient.setPhone(request.getPhone());
+        patient.setAge(request.getAge());
+        patient.setGender(request.getGender());
+        patient.setDob(request.getDob());
+        patient.setBloodGroup(request.getBloodGroup());
+        patient.setAddress(request.getAddress());
+        patient.setCity(request.getCity());
+        patient.setState(request.getState());
+        patient.setPincode(request.getPincode());
+        patient.setMedicalHistory(request.getMedicalHistory());
+        
+        patientRepository.save(patient);
+
+        // Trigger Admin notification
+        try {
+            Notification notification = new Notification();
+            notification.setTitle("Patient Registered");
+            notification.setMessage("A new patient, " + savedUser.getName() + " (" + savedUser.getEmail() + "), has registered.");
+            notification.setType("PATIENT_REGISTERED");
+            notification.setRole("ADMIN");
+            notificationRepository.save(notification);
+        } catch (Exception e) {
+            logger.error("Failed to save patient registration notification: " + e.getMessage());
+        }
+
+        logger.info("Successfully registered user and patient: {}", savedUser.getEmail());
         return ResponseEntity.ok(savedUser);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
-        logger.debug("Login request received. Email received: {}", request.getEmail());
+        logger.debug("Login request received for Email: {}", request.getEmail());
 
         User user = userRepository.findByEmail(request.getEmail()).orElse(null);
         if (user == null) {
@@ -67,12 +109,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(errorResponse);
         }
 
-        logger.debug("User found: {}, role: {}", user.getEmail(), user.getRole());
-        logger.debug("Stored password hash: {}", user.getPassword());
-
         boolean matches = passwordEncoder.matches(request.getPassword(), user.getPassword());
-        logger.debug("Password matches: {}", matches);
-
         if (!matches) {
             logger.warn("Login failed: Password mismatch for email: {}", request.getEmail());
             Map<String, String> errorResponse = new HashMap<>();

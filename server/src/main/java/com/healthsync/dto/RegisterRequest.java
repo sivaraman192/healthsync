@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class RegisterRequest {
-    @NotBlank(message = "Name cannot be empty")
+    @NotBlank(message = "Full Name cannot be empty")
     private String name;
 
     @NotBlank(message = "Email cannot be empty")
@@ -17,4 +17,14 @@ public class RegisterRequest {
     private String password;
 
     private String phone;
+
+    private Integer age;
+    private String gender;
+    private String dob;
+    private String bloodGroup;
+    private String address;
+    private String city;
+    private String state;
+    private String pincode;
+    private String medicalHistory;
 }

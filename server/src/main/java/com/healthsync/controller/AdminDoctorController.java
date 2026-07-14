@@ -2,7 +2,9 @@ package com.healthsync.controller;
 
 import com.healthsync.dto.DoctorRequest;
 import com.healthsync.model.Doctor;
+import com.healthsync.model.Notification;
 import com.healthsync.repository.DoctorRepository;
+import com.healthsync.repository.NotificationRepository;
 import com.healthsync.service.DoctorService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -27,6 +29,9 @@ public class AdminDoctorController {
     @Autowired
     private DoctorService doctorService;
 
+    @Autowired
+    private NotificationRepository notificationRepository;
+
     @GetMapping("/api/doctors/email/{email}")
     public ResponseEntity<Doctor> getDoctorByEmail(@PathVariable String email) {
         logger.debug("Received request to get doctor by email: {}", email);
@@ -43,6 +48,16 @@ public class AdminDoctorController {
     public ResponseEntity<Doctor> createDoctor(@Valid @RequestBody DoctorRequest doctorRequest) {
         logger.info("Received request to create doctor with payload: {}", doctorRequest);
         Doctor savedDoctor = doctorService.createDoctor(doctorRequest);
+        try {
+            Notification notification = new Notification();
+            notification.setTitle("Doctor Created");
+            notification.setMessage("A new doctor, Dr. " + savedDoctor.getName() + " (" + savedDoctor.getSpecialization() + "), has been registered.");
+            notification.setType("DOCTOR_CREATED");
+            notification.setRole("ADMIN");
+            notificationRepository.save(notification);
+        } catch (Exception e) {
+            logger.error("Failed to save doctor creation notification: " + e.getMessage());
+        }
         logger.info("Successfully created doctor: {}", savedDoctor);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedDoctor);
     }

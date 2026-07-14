@@ -1,15 +1,21 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Activity, LogOut, Calendar, User, Settings, Phone } from 'lucide-react';
+import { useToast } from '../components/Toast';
+import { Building, LogOut, Calendar, User } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { showToast, ToastComponent } = useToast();
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    showToast('Logged out successfully', 'info');
+    setTimeout(() => {
+      navigate('/');
+    }, 800);
   };
 
   const getDashboardPath = () => {
@@ -19,56 +25,72 @@ const Navbar = () => {
     return '/patient/dashboard';
   };
 
-  return (
-    <nav className="bg-white border-b border-slate-100 sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2 text-teal-600 font-bold text-xl">
-              <Activity className="h-6 w-6 text-teal-500 animate-pulse" />
-              <span className="tracking-wide">HealthSync</span>
-            </Link>
-          </div>
+  const isHome = location.pathname === '/' || location.pathname === '/hospital';
 
-          <div className="flex items-center space-x-4">
-            <Link to="/" className="text-slate-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium">Home</Link>
-            <Link to="/contact" className="text-slate-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium">Contact</Link>
-            
-            {user ? (
-              <>
-                <Link to={getDashboardPath()} className="text-slate-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium flex items-center gap-1">
-                  <User className="h-4 w-4" /> Dashboard
+  return (
+    <nav className="bg-[#030303]/85 sticky top-0 z-40 backdrop-blur-xl border-b border-white/5 py-4 px-6 md:px-12 select-none">
+      {ToastComponent}
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+              <Building className="h-4.5 w-4.5 text-white" />
+            </div>
+            <div>
+              <span className="font-extrabold text-base tracking-tight text-white">HealthSync</span>
+              <span className="text-[8px] font-black text-cyan-405 ml-1.5 uppercase tracking-widest bg-cyan-950/40 border border-cyan-800/30 px-2 py-0.5 rounded-full">HQ</span>
+            </div>
+          </Link>
+        </div>
+
+        {/* Menu Links */}
+        <div className="hidden xl:flex items-center gap-6 text-xs font-bold text-slate-400">
+          {isHome ? (
+            <>
+              <a href="#home" className="hover:text-white transition-colors">Home</a>
+              <a href="#about" className="hover:text-white transition-colors">About Hospital</a>
+              <a href="#departments" className="hover:text-white transition-colors">Departments</a>
+              <a href="#doctors" className="hover:text-white transition-colors">Doctors</a>
+              <a href="#services" className="hover:text-white transition-colors">Services</a>
+              <a href="#contact" className="hover:text-white transition-colors">Contact</a>
+            </>
+          ) : (
+            <>
+              <Link to="/" className="hover:text-white transition-colors">Home</Link>
+              <Link to="/#about" className="hover:text-white transition-colors">About Hospital</Link>
+              <Link to="/#departments" className="hover:text-white transition-colors">Departments</Link>
+              <Link to="/#doctors" className="hover:text-white transition-colors">Doctors</Link>
+              <Link to="/#services" className="hover:text-white transition-colors">Services</Link>
+              <Link to="/#contact" className="hover:text-white transition-colors">Contact</Link>
+            </>
+          )}
+
+          {user ? (
+            <>
+              <Link to={getDashboardPath()} className="text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1.5">
+                <User className="h-4 w-4" /> Dashboard
+              </Link>
+              {user.role === 'PATIENT' && (
+                <Link to="/book-appointment" className="text-slate-400 hover:text-white transition-colors flex items-center gap-1">
+                  <Calendar className="h-4 w-4" /> Book Appointment
                 </Link>
-                {user.role === 'PATIENT' && (
-                  <>
-                    <Link to="/book-appointment" className="text-slate-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium flex items-center gap-1">
-                      <Calendar className="h-4 w-4" /> Book Appointment
-                    </Link>
-                    <Link to="/my-appointments" className="text-slate-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium">My Appointments</Link>
-                  </>
-                )}
-                {user.role === 'ADMIN' && (
-                  <>
-                    <Link to="/doctor-management" className="text-slate-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium">Manage Doctors</Link>
-                    <Link to="/appointment-management" className="text-slate-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium">Manage Appointments</Link>
-                  </>
-                )}
-                <span className="text-slate-400">|</span>
-                <span className="text-sm font-semibold text-teal-700 bg-teal-50 px-3 py-1 rounded-full">{user.name} ({user.role})</span>
-                <button
-                  onClick={handleLogout}
-                  className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-md text-sm font-medium transition flex items-center gap-1"
-                >
-                  <LogOut className="h-4 w-4" /> Logout
-                </button>
-              </>
-            ) : (
-              <div className="flex space-x-2">
-                <Link to="/login" className="text-slate-700 hover:text-teal-600 px-4 py-2 rounded-md text-sm font-medium">Login</Link>
-                <Link to="/register" className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md text-sm font-medium transition shadow-sm">Register</Link>
-              </div>
-            )}
-          </div>
+              )}
+              <span className="text-slate-700">|</span>
+              <span className="text-xs font-bold text-blue-450 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full">{user.name}</span>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Link to="/login" className="text-slate-400 hover:text-white px-3 py-2 transition-colors">Login</Link>
+              <Link to="/register" className="bg-gradient-to-r from-blue-600 to-cyan-550 hover:from-blue-550 hover:to-cyan-405 text-white px-4 py-2 rounded-xl font-bold transition-all shadow-lg shadow-blue-500/10">Register</Link>
+            </div>
+          )}
         </div>
       </div>
     </nav>
