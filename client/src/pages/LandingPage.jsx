@@ -131,28 +131,7 @@ const LandingPage = () => {
   const [contactData, setContactData] = useState({ name: '', email: '', phone: '', message: '' });
   const [sendingContact, setSendingContact] = useState(false);
 
-  // Monitor Scroll for Sticky Navbar & Active Section Link
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ['home', 'about', 'departments', 'doctors', 'services', 'contact'];
-      const scrollPos = window.scrollY + 200;
 
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const top = element.offsetTop;
-          const height = element.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
-            setActiveSection(section);
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const handleContactSubmit = (e) => {
     e.preventDefault();
@@ -176,7 +155,7 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="bg-[#030303] text-slate-100 min-h-screen relative font-sans overflow-x-hidden antialiased select-none">
+    <div className="bg-[#030303] text-slate-100 min-h-screen relative font-sans overflow-x-hidden antialiased select-none pt-[80px]">
       {ToastComponent}
 
       {/* Floating Animated Background Blobs */}
@@ -184,8 +163,8 @@ const LandingPage = () => {
       <div className="absolute top-[800px] right-[10%] w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[130px] pointer-events-none animate-pulse duration-[12s]" />
       <div className="absolute top-[2000px] left-[5%] w-[500px] h-[500px] bg-cyan-600/5 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* STICKY GLASSMORPHIC NAVBAR */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#030303]/80 border-b border-white/5 py-4 px-6 md:px-12 flex items-center justify-between transition-all">
+      {/* FIXED GLASSMORPHIC NAVBAR */}
+      <header className="fixed top-0 left-0 right-0 w-full z-[99999] backdrop-blur-xl bg-[#030303]/80 border-b border-white/5 py-4 px-6 md:px-12 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/20">
             <Building className="h-5 w-5 text-white" />
@@ -196,7 +175,7 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Navigation Links with animated underlines */}
+        {/* Navigation Links */}
         <nav className="hidden xl:flex items-center gap-8 text-xs font-bold text-slate-400">
           {[
             { id: 'home', label: 'Home' },
@@ -213,10 +192,7 @@ const LandingPage = () => {
             >
               {item.label}
               {activeSection === item.id && (
-                <motion.span 
-                  layoutId="navUnderline" 
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500 rounded-full"
-                />
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500 rounded-full" />
               )}
             </a>
           ))}

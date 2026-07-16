@@ -29,20 +29,7 @@ import {
 const HospitalWebsite = () => {
   // Navigation active state
   const [activeTab, setActiveTab] = useState('Home');
-  const [isScrolled, setIsScrolled] = useState(false);
 
-  // Scroll handler for transparent to white sticky navbar
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Doctor Detail View state
   const [selectedDoctor, setSelectedDoctor] = useState(null);
@@ -177,9 +164,9 @@ const HospitalWebsite = () => {
   };
 
   return (
-    <div className="bg-slate-50 text-slate-900 min-h-screen relative font-sans selection:bg-red-500 selection:text-white">
+    <div className="bg-slate-50 text-slate-900 min-h-screen relative font-sans selection:bg-red-500 selection:text-white pt-[116px]">
       {/* Top emergency announcement bar */}
-      <div className="bg-red-600 text-white py-2 px-6 flex justify-between items-center text-xs font-bold z-50 relative">
+      <div className="bg-red-600 text-white py-2 px-6 flex justify-between items-center text-xs font-bold z-[100000] fixed top-0 left-0 w-full h-[36px]">
         <div className="flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full bg-white animate-ping" />
           <span>24/7 Trauma Emergency Line: +91 99999 11111</span>
@@ -191,12 +178,8 @@ const HospitalWebsite = () => {
         </div>
       </div>
 
-      {/* Sticky Premium Navbar */}
-      <header className={`sticky top-0 z-40 transition-all duration-300 border-b ${
-        isScrolled 
-          ? 'bg-white/95 backdrop-blur-md shadow-md border-slate-200 py-3' 
-          : 'bg-white border-slate-100 py-4'
-      }`}>
+      {/* Fixed Premium Navbar */}
+      <header className="fixed top-[36px] left-0 right-0 w-full z-[99999] border-b bg-white border-slate-100 py-4 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 flex justify-between items-center">
           {/* Hospital Logo */}
           <div className="flex items-center gap-3">
