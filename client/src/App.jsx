@@ -30,7 +30,7 @@ function AppContent() {
   return (
     <div className={`flex flex-col min-h-screen ${isDashboardOrLandingRoute ? 'bg-[#050505] text-slate-100' : 'bg-slate-50'}`}>
       {!isDashboardOrLandingRoute && <Navbar />}
-      <main className="flex-grow">
+      <main className={`flex-grow ${!isDashboardOrLandingRoute ? 'pt-[80px]' : ''}`}>
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />

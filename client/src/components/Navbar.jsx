@@ -28,7 +28,7 @@ const Navbar = () => {
   const isHome = location.pathname === '/' || location.pathname === '/hospital';
 
   return (
-    <nav className="bg-[#030303]/85 sticky top-0 z-40 backdrop-blur-xl border-b border-white/5 py-4 px-6 md:px-12 select-none">
+    <nav className="bg-[#030303]/85 fixed top-0 left-0 w-full z-[9999] backdrop-blur-xl border-b border-white/5 py-4 px-6 md:px-12 select-none">
       {ToastComponent}
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo */}
